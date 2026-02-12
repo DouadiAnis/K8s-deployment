@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: cloudshop
+  name: backend-reader
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backend-reader-binding
+  namespace: cloudshop
+subjects:
+- kind: ServiceAccount
+  name: sa-backend
+  namespace: cloudshop
+roleRef:
+  kind: Role
+  name: backend-reader
+  apiGroup: rbac.authorization.k8s.io
