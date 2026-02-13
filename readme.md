@@ -1,4 +1,3 @@
-cat << 'EOF' > README.md
 # ☁️ Projet Technique : Déploiement CloudShop sur Kubernetes (AKS)
 
 ## 📝 Contexte et Objectifs
