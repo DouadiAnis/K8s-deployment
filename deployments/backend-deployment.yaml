@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: cloudshop
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      serviceAccountName: sa-backend
+      
+      # Anti-Affinity : Force les pods sur des nœuds différents (Exigence projet)
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - backend
+            topologyKey: "kubernetes.io/hostname"
+            
+      containers:
+      - name: backend
+        # Ton image hébergée sur Azure
+        image: cloudshopregistryanis.azurecr.io/cloudshop-backend:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MYSQL_HOST
+          value: "mysql"
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-database
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName

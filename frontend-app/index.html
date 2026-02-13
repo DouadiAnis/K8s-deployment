@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CloudShop - Accueil</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f8ff; }
+        .box { border: 1px solid #ddd; padding: 20px; margin: 20px auto; max-width: 600px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #0078d4; }
+        button { background-color: #0078d4; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #005a9e; }
+        #result { margin-top: 20px; font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Bienvenue sur CloudShop ☁️🛒</h1>
+    <div class="box">
+        <p>Ceci est le Frontend (Nginx).</p>
+        <p>Cliquez ci-dessous pour tester la connexion au Backend + DB :</p>
+        <button onclick="callApi()">Tester la connexion API</button>
+        <div id="result">...</div>
+    </div>
+
+    <script>
+        function callApi() {
+            document.getElementById('result').innerText = "Chargement...";
+            fetch('/api')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = 
+                        "Message: " + data.message + "<br>" +
+                        "DB Status: " + data.db_status + "<br>" +
+                        "Backend Node: " + data.node;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerText = "Erreur : Impossible de joindre l'API.";
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

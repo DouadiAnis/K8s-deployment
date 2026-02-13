@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: cloudshop
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      serviceAccountName: sa-frontend
+      containers:
+      - name: frontend
+        image: cloudshopregistryanis.azurecr.io/cloudshop-frontend:v1 # <--- Ton image
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

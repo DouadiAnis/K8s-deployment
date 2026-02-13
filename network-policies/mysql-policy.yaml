@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-only
+  namespace: cloudshop
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql # Cette règle s'applique à la DB
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend # Seuls les pods "backend" peuvent entrer
+    ports:
+    - protocol: TCP
+      port: 3306

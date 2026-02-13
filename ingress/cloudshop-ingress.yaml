@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloudshop-ingress
+  namespace: cloudshop
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - cloudshop.local
+    secretName: cloudshop-tls
+  rules:
+  - host: cloudshop.local
+    http:
+      paths:
+      # Route 1 : L'API vers le backend
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: backend
+            port:
+              number: 8080
+      # Route 2 : Le Frontend (racine)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
