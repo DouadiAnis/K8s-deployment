@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: monitoring # Important : Il doit être avec Grafana !
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - cloudshop.local
+    secretName: cloudshop-tls # La copie qu'on vient de faire
+  rules:
+  - host: cloudshop.local
+    http:
+      paths:
+      - path: /monitoring
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-grafana # Le nom du service créé par Helm
+            port:
+              number: 80

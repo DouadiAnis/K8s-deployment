@@ -1,0 +1,6 @@
+grafana:
+  grafana.ini:
+    server:
+      domain: cloudshop.local
+      root_url: https://cloudshop.local/monitoring/
+      serve_from_sub_path: true
